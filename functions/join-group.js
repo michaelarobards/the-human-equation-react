@@ -1,12 +1,12 @@
-import events from "./utils/events.js";
-import getNextSessions from "./utils/getNextSessions.js";
-import goodnessOfFit from "./utils/goodnessOfFit.js";
-import { analyzeIntake } from "./utils/analyzeIntake.js";
+import events from "../join-group-api/src/events.js";
+import getNextSessions from "../join-group-api/src/getNextSessions.js";
+import goodnessOfFit from "../join-group-api/src/goodnessOfFit.js";
+import { analyzeIntake } from "../join-group-api/src/analyzeIntake.js";
 import {
     sendEmail,
     buildWelcomeEmail,
     buildTherapistBriefing
-} from "./utils/sendEmail.js";
+} from "../join-group-api/src/sendEmail.js";
 
 export async function onRequest(context) {
     const { request, env } = context;

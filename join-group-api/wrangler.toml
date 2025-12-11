@@ -1,0 +1,9 @@
+name = "the-human-equation-api"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "HQ_DB"
+database_name = "the-human-equation-db"
+database_id = "fb5c2703-5a45-4cf5-afa6-0ec7c5098644"
