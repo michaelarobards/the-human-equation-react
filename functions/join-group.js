@@ -8,13 +8,10 @@ import {
     buildTherapistBriefing
 } from "./utils/sendEmail.js";
 
-/**
- * Pages Functions v2 entry point
- * Ensures POST routing works
- */
 export async function onRequest(context) {
     const { request, env } = context;
 
+    // Reject everything except POST
     if (request.method !== "POST") {
         return new Response("Method Not Allowed", { status: 405 });
     }
@@ -35,9 +32,11 @@ export async function onRequest(context) {
         const analysis = await analyzeIntake(intake);
         const gofScore = goodnessOfFit(intake);
 
+        // Save to D1
         if (env.HQ_DB) {
             await env.HQ_DB.prepare(
-                `INSERT INTO registrations (name,email,groupName,groupTime,reason,analysis,gof,nextSessions,ts)
+                `INSERT INTO registrations 
+          (name,email,groupName,groupTime,reason,analysis,gof,nextSessions,ts)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
             )
                 .bind(
@@ -53,6 +52,7 @@ export async function onRequest(context) {
                 .run();
         }
 
+        // Send emails
         await sendEmail({
             to: intake.email,
             ...buildWelcomeEmail(intake, analysis, intake.nextSessions)
@@ -67,6 +67,7 @@ export async function onRequest(context) {
             status: 200,
             headers: { "Content-Type": "application/json" }
         });
+
     } catch (err) {
         return new Response(JSON.stringify({ error: err.message }), {
             status: 500,
