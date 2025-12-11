@@ -11,7 +11,6 @@ export default function RegisterModal({ isOpen, groupName, groupTime, closeModal
         e.preventDefault();
 
         await fetch("https://the-human-equation-react.pages.dev/__functions/join-group", {
-            ", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
