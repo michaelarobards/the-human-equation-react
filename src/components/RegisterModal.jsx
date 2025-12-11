@@ -10,7 +10,7 @@ export default function RegisterModal({ isOpen, groupName, groupTime, closeModal
     async function handleSubmit(e) {
         e.preventDefault();
 
-        await fetch("/api/join-group", {
+        await fetch("https://38019bfd.the-human-equation-react.pages.dev/api/join-group", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
