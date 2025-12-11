@@ -4,7 +4,19 @@ import goodnessOfFit from "./utils/goodnessOfFit.js";
 import { analyzeIntake } from "./utils/analyzeIntake.js";
 import { sendEmail, buildWelcomeEmail, buildTherapistBriefing } from "./utils/sendEmail.js";
 
-export async function onRequestPost({ request, env }) {
+/**
+ * Cloudflare Pages Functions Entry Point
+ * Guarantees POST routing and proper 405 for other methods
+ */
+export const onRequest = async (context) => {
+    if (context.request.method !== "POST") {
+        return new Response("Method Not Allowed", { status: 405 });
+    }
+
+    return handlePost(context);
+};
+
+async function handlePost({ request, env }) {
     try {
         const body = await request.json();
 
@@ -21,9 +33,11 @@ export async function onRequestPost({ request, env }) {
         const analysis = await analyzeIntake(intake);
         const gofScore = goodnessOfFit(intake);
 
+        // Store in D1
         if (env.HQ_DB) {
             await env.HQ_DB.prepare(
-                `INSERT INTO registrations (name,email,groupName,groupTime,reason,analysis,gof,nextSessions,ts)
+                `INSERT INTO registrations 
+          (name,email,groupName,groupTime,reason,analysis,gof,nextSessions,ts)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
             )
                 .bind(
@@ -35,22 +49,30 @@ export async function onRequestPost({ request, env }) {
                     JSON.stringify(analysis),
                     gofScore,
                     JSON.stringify(intake.nextSessions)
-                )
-                .run();
+                ).run();
         }
 
-        const welcome = buildWelcomeEmail(intake, analysis, intake.nextSessions);
-        await sendEmail({ to: intake.email, ...welcome });
-
-        const briefing = buildTherapistBriefing(intake, analysis, gofScore);
+        // Send user email
         await sendEmail({
-            to: "michaelarobards@gmail.com",
-            ...briefing
+            to: intake.email,
+            ...buildWelcomeEmail(intake, analysis, intake.nextSessions)
         });
 
-        return new Response(JSON.stringify({ success: true }), { status: 200 });
+        // Send therapist briefing
+        await sendEmail({
+            to: "michaelarobards@gmail.com",
+            ...buildTherapistBriefing(intake, analysis, gofScore)
+        });
+
+        return new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+        });
 
     } catch (err) {
-        return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+        return new Response(JSON.stringify({ error: err.message }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" }
+        });
     }
 }
