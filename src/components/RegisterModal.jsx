@@ -10,7 +10,8 @@ export default function RegisterModal({ isOpen, groupName, groupTime, closeModal
     async function handleSubmit(e) {
         e.preventDefault();
 
-        await fetch("https://38019bfd.the-human-equation-react.pages.dev/api/join-group", {
+        await fetch("await fetch("https://the-human-equation-react.pages.dev/__functions/join-group", {
+            ", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -22,42 +23,42 @@ export default function RegisterModal({ isOpen, groupName, groupTime, closeModal
             })
         });
 
-        closeModal();
-    }
+    closeModal();
+}
 
-    return (
-        <div className="modal-overlay">
-            <div className="modal">
-                <h2>Join {groupName}</h2>
-                <p>{groupTime}</p>
+return (
+    <div className="modal-overlay">
+        <div className="modal">
+            <h2>Join {groupName}</h2>
+            <p>{groupTime}</p>
 
-                <form onSubmit={handleSubmit}>
-                    <input
-                        required
-                        placeholder="Your name"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                    />
+            <form onSubmit={handleSubmit}>
+                <input
+                    required
+                    placeholder="Your name"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                />
 
-                    <input
-                        required
-                        placeholder="Email address"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
+                <input
+                    required
+                    placeholder="Email address"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                />
 
-                    <textarea
-                        placeholder="What brings you here?"
-                        value={reason}
-                        onChange={e => setReason(e.target.value)}
-                    />
+                <textarea
+                    placeholder="What brings you here?"
+                    value={reason}
+                    onChange={e => setReason(e.target.value)}
+                />
 
-                    <button className="cta-primary" type="submit">Join for Free</button>
-                    <button className="cta-secondary" type="button" onClick={closeModal}>
-                        Cancel
-                    </button>
-                </form>
-            </div>
+                <button className="cta-primary" type="submit">Join for Free</button>
+                <button className="cta-secondary" type="button" onClick={closeModal}>
+                    Cancel
+                </button>
+            </form>
         </div>
-    );
+    </div>
+);
 }
