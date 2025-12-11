@@ -1,4 +1,4 @@
-import events from "./utils/events.json";
+import events from "./utils/events.js";
 import getNextSessions from "./utils/getNextSessions.js";
 import goodnessOfFit from "./utils/goodnessOfFit.js";
 import { analyzeIntake } from "./utils/analyzeIntake.js";
