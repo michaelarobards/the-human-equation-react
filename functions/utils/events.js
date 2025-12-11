@@ -1,4 +1,4 @@
-{
-    "communityEvents": [],
-        "monthlyEvents": []
-}
+export default {
+    communityEvents: [],
+    monthlyEvents: []
+};
